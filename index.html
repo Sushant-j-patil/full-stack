@@ -1,28 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Student Management</title>
+  <title>Mongo Teacher Management</title>
   <style>
-    body { font-family: Arial; padding: 30px; background:#f4f4f4; }
-    h2 { text-align:center; }
+    body { font-family: Arial; padding: 30px; }
     input { padding:8px; margin:5px; }
-    button { padding:8px 15px; cursor:pointer; }
-    table { width:100%; margin-top:20px; border-collapse:collapse; background:white; }
-    th, td { padding:10px; border:1px solid #ddd; text-align:center; }
+    button { padding:8px; cursor:pointer; }
+    table { width:100%; margin-top:20px; border-collapse:collapse; }
+    th, td { border:1px solid #ccc; padding:10px; text-align:center; }
     th { background:#333; color:white; }
-    .edit { background:orange; color:white; border:none; }
-    .delete { background:red; color:white; border:none; }
   </style>
 </head>
 <body>
 
-<h2>Student Management System</h2>
+<h2>Mongo Teacher Management</h2>
 
 <input type="hidden" id="studentId">
 <input type="text" id="name" placeholder="Name">
 <input type="text" id="department" placeholder="Department">
 <input type="email" id="email" placeholder="Email">
-<button onclick="saveStudent()">Save</button>
+<button onclick="saveTeacher()">Save</button>
 
 <table>
   <thead>
@@ -34,37 +31,37 @@
       <th>Action</th>
     </tr>
   </thead>
-  <tbody id="studentTable"></tbody>
+  <tbody id="teacherTable"></tbody>
 </table>
 
 <script>
-const API_URL = "/students";
+const API_URL = "/teachers";
 
-async function fetchStudents() {
+async function fetchTeachers() {
   const res = await fetch(API_URL);
   const data = await res.json();
 
-  const table = document.getElementById("studentTable");
+  const table = document.getElementById("teacherTable");
   table.innerHTML = "";
 
-  data.forEach(student => {
+  data.forEach(teacher => {
     table.innerHTML += `
       <tr>
-        <td>${student.id}</td>
-        <td>${student.name}</td>
-        <td>${student.department}</td>
-        <td>${student.email}</td>
+        <td>${teacher._id}</td>
+        <td>${teacher.name}</td>
+        <td>${teacher.department}</td>
+        <td>${teacher.email}</td>
         <td>
-          <button class="edit" onclick="editStudent(${student.id}, '${student.name}', '${student.department}', '${student.email}')">Edit</button>
-          <button class="delete" onclick="deleteStudent(${student.id})">Delete</button>
+          <button onclick="editTeacher('${teacher._id}','${teacher.name}','${teacher.department}','${teacher.email}')">Edit</button>
+          <button onclick="deleteTeacher('${teacher._id}')">Delete</button>
         </td>
       </tr>
     `;
   });
 }
 
-async function saveStudent() {
-  const id = document.getElementById("studentId").value;
+async function saveTeacher() {
+  const id = document.getElementById("teacherId").value;
   const name = document.getElementById("name").value;
   const department = document.getElementById("department").value;
   const email = document.getElementById("email").value;
@@ -84,29 +81,29 @@ async function saveStudent() {
   }
 
   clearForm();
-  fetchStudents();
+  fetchTeachers();
 }
 
-function editStudent(id, name, department, email) {
-  document.getElementById("studentId").value = id;
+function editTeacher(id, name, department, email) {
+  document.getElementById("teacherId").value = id;
   document.getElementById("name").value = name;
   document.getElementById("department").value = department;
   document.getElementById("email").value = email;
 }
 
-async function deleteStudent(id) {
+async function deleteTeacher(id) {
   await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-  fetchStudents();
+  fetchTeachers();
 }
 
 function clearForm() {
-  document.getElementById("studentId").value = "";
+  document.getElementById("teacherId").value = "";
   document.getElementById("name").value = "";
   document.getElementById("department").value = "";
   document.getElementById("email").value = "";
 }
 
-fetchStudents();
+fetchTeachers();
 </script>
 
 </body>
